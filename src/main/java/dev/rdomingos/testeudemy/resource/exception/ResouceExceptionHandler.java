@@ -1,5 +1,6 @@
 package dev.rdomingos.testeudemy.resource.exception;
 
+import dev.rdomingos.testeudemy.service.exception.DataIntegratyViolationExcepiton;
 import dev.rdomingos.testeudemy.service.exception.ObjectNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -18,5 +19,12 @@ public class ResouceExceptionHandler {
         StandardError error =
                 new StandardError(LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), ex.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(DataIntegratyViolationExcepiton.class)
+    public ResponseEntity<StandardError>DataIntegratyViolationException(DataIntegratyViolationExcepiton ex, HttpServletRequest request) {
+        StandardError error =
+                new StandardError(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), ex.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 }
