@@ -163,6 +163,18 @@ class UserServiceImplTest {
 
     }
 
+    @Test
+    @DisplayName("whenDeleteThenReturnAnObjectNotFoundException")
+    void deleteObjectNotFoundException() {
+        when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Objeto nao encontrado"));
+        try{
+            service.delete(ID);
+        }catch (Exception e){
+            assertEquals(ObjectNotFoundException.class, e.getClass());
+            assertEquals("Objeto nao encontrado", e.getMessage());
+        }
+    }
+
 
     private void startUser(){
         user = new User(ID, NAME, MAIL, PASSWORD);
