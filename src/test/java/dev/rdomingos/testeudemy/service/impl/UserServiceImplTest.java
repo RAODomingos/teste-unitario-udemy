@@ -3,6 +3,7 @@ package dev.rdomingos.testeudemy.service.impl;
 import dev.rdomingos.testeudemy.domain.User;
 import dev.rdomingos.testeudemy.domain.dto.UserDTO;
 import dev.rdomingos.testeudemy.repository.UserRepository;
+import dev.rdomingos.testeudemy.service.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,6 +62,20 @@ class UserServiceImplTest {
         assertEquals(MAIL, response.getEmail());
 
     }
+
+    @Test
+    @DisplayName("whenFindByIdThenReturnAnException")
+    void findByIdNotFound() {
+        when(repository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Objeto nao encontrado"));
+
+        try{
+            service.findById(ID);
+        }catch (Exception e){
+            assertEquals(ObjectNotFoundException.class, e.getClass());
+            assertEquals("Objeto nao encontrado", e.getMessage());
+        }
+    }
+
 
     @Test
     void findAll() {
