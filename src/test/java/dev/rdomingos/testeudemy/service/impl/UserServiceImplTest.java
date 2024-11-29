@@ -3,6 +3,7 @@ package dev.rdomingos.testeudemy.service.impl;
 import dev.rdomingos.testeudemy.domain.User;
 import dev.rdomingos.testeudemy.domain.dto.UserDTO;
 import dev.rdomingos.testeudemy.repository.UserRepository;
+import dev.rdomingos.testeudemy.service.exception.DataIntegratyViolationExcepiton;
 import dev.rdomingos.testeudemy.service.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,8 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -108,7 +108,34 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("whenCreateThenReturnAnDataIntegratyViolationExcepiton")
+    void createDataException() {
+        when(repository.findByEmail(anyString())).thenReturn(optionalUser);
+
+        try{
+            optionalUser.get().setId(2);
+            service.create(userDTO);
+        }catch (Exception e){
+            assertEquals(DataIntegratyViolationExcepiton.class, e.getClass());
+            assertEquals("Email já cadastrado no sistema", e.getMessage());
+        }
+
+    }
+
+    @Test
+    @DisplayName("whenUpdateThenReturnSucess")
     void update() {
+        when(repository.save(any())).thenReturn(user);
+
+        User response = service.update(userDTO);
+
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(MAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
+
     }
 
     @Test
