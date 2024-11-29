@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
@@ -93,7 +94,17 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("whenCreateThenReturnSucess")
     void create() {
+        when(repository.save(any())).thenReturn(user);
+        User response = service.create(userDTO);
+        assertNotNull(response);
+        assertEquals(User.class, response.getClass());
+        assertEquals(ID, response.getId());
+        assertEquals(NAME, response.getName());
+        assertEquals(MAIL, response.getEmail());
+        assertEquals(PASSWORD, response.getPassword());
+
     }
 
     @Test
