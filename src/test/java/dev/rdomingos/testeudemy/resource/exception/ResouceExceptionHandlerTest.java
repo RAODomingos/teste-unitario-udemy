@@ -1,5 +1,6 @@
 package dev.rdomingos.testeudemy.resource.exception;
 
+import dev.rdomingos.testeudemy.service.exception.DataIntegratyViolationExcepiton;
 import dev.rdomingos.testeudemy.service.exception.ObjectNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -42,6 +43,20 @@ class ResouceExceptionHandlerTest {
     }
 
     @Test
-    void dataIntegratyViolationException() {
+    @DisplayName("whenDataIntegrityViolationExceptionThenReturnResponseEntity")
+    void dataIntegrityViolationException() {
+        ResponseEntity<StandardError> response = exceptionHandler
+                .dataIntegrityViolationException(
+                        new DataIntegratyViolationExcepiton("Email já cadastrado no sistema"),
+                        new MockHttpServletRequest());
+
+        assertNotNull(response);
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(StandardError.class, response.getBody().getClass());
+        assertEquals(ResponseEntity.class, response.getClass());
+        assertEquals("Email já cadastrado no sistema", response.getBody().getError());
+        assertEquals(400, response.getBody().getStatus());
+
     }
 }
