@@ -139,6 +139,21 @@ class UserServiceImplTest {
     }
 
     @Test
+    @DisplayName("whenUpdateThenReturnAnDataIntegratyViolationExcepiton")
+    void updateDataException() {
+        when(repository.findByEmail(anyString())).thenReturn(optionalUser);
+
+        try{
+            optionalUser.get().setId(2);
+            service.update(userDTO);
+        }catch (Exception e){
+            assertEquals(DataIntegratyViolationExcepiton.class, e.getClass());
+            assertEquals("Email já cadastrado no sistema", e.getMessage());
+        }
+
+    }
+
+    @Test
     void delete() {
     }
 
